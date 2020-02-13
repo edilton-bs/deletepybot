@@ -28,6 +28,11 @@ def start_doc(message):
                 bot.send_message(message.chat.id, text="Уважаемый @{}! \n\nПожалуйста, заливайте ваши исходные коды на сервисы: pastebin.com или gist.github.com \n\nСпасибо за понимания!".format(message.from_user.username))
 
 
+@bot.message_handler(commands=["check"])
+def check_status(message):
+    bot.send_message(message.chat.id, "Ok!", reply_to_message_id=message.message_id)
+
+
 @server.route('/' + TOKEN, methods=['POST'])
 def getMessage():
     bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
