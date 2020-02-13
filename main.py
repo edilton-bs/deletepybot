@@ -11,20 +11,28 @@ bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(content_types=["document"])
 def start_doc(message):
-    if message.document.file_name.endswith("py"):
+    """Функция ответа пользователю"""
+    if restricted_filename(message.document.file_name):
         try:
-            bot.send_message(message.chat.id, text="Уважаемый @{} ! \n\nПожалуйста, заливайте ваши исходные коды на сервисы: pastebin.com или gist.github.com \n\nСпасибо за понимания!".format(user_mention(message.from_user)))
+            bot.send_message(message.chat.id, text="Уважаемый {} ! \n\nПожалуйста, заливайте ваши исходные коды на сервисы: pastebin.com или gist.github.com \n\nСпасибо за понимания!".format(user_mention(message.from_user)))
             bot.delete_message(message.chat.id, message.message_id)
         except Exception as A:
             print("[LOG]", A)
 
 
 def user_mention(user):
-    return user.username if user.username else user.first_name
+    """Функция для определения наличия @username"""
+    return "@" +  user.username if user.username else user.first_name
+
+
+def restricted_filename(file_name):
+    """Функция для проверки имени файла"""
+    return file_name.endswith("py")
 
 
 @bot.message_handler(commands=["check"])
 def check_status(message):
+    """Функция для ответа пользователю"""
     bot.send_message(message.chat.id, "Ok!", reply_to_message_id=message.message_id)
 
 
