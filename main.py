@@ -11,21 +11,16 @@ bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(content_types=["document"])
 def start_doc(message):
-    if str(message.from_user.username) == "None":
-        if message.document.file_name.endswith("py"):
-            try:
-                bot.send_message(message.chat.id, text="Уважаемый {}! \n\nПожалуйста, заливайте ваши исходные коды на сервисы: pastebin.com или gist.github.com \n\nСпасибо за понимания!".format(message.from_user.first_name), reply_to_message_id=message.message_id)
-                bot.delete_message(message.chat.id, message.message_id)
-            except Exception as A:
-                print("[LOG]", A)
-    else:
-        if message.document.file_name.endswith("py"):
-            try:
-                bot.delete_message(message.chat.id, message.message_id)
-            except Exception as B:
-                print("[LOG]", B)
-            finally:
-                bot.send_message(message.chat.id, text="Уважаемый @{}! \n\nПожалуйста, заливайте ваши исходные коды на сервисы: pastebin.com или gist.github.com \n\nСпасибо за понимания!".format(message.from_user.username))
+    if message.document.file_name.endswith("py"):
+        try:
+            bot.send_message(message.chat.id, text="Уважаемый @{} ! \n\nПожалуйста, заливайте ваши исходные коды на сервисы: pastebin.com или gist.github.com \n\nСпасибо за понимания!".format(user_mention(message.from_user)))
+            bot.delete_message(message.chat.id, message.message_id)
+        except Exception as A:
+            print("[LOG]", A)
+
+
+def user_mention(user):
+    return user.username if user.username else user.first_name
 
 
 @bot.message_handler(commands=["check"])
