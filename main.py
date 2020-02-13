@@ -1,8 +1,12 @@
 import telebot
 import os
+from flask import Flask, request
 
 
-bot = telebot.TeleBot(os.getenv("TOKEN"))
+TOKEN = os.getenv("TOKEN")
+URL = os.getenv("URL")
+server = Flask(__name__)
+bot = telebot.TeleBot(TOKEN)
 
 
 @bot.message_handler(content_types=["document"])
@@ -17,5 +21,18 @@ def start_doc(message):
             bot.send_message(message.chat.id, text="Уважаемый @{}! \n\nПожалуйста, заливаёте ваши исходные коды на сервисы: pastebin.com или gist.github.com \n\nСпасибо за понимания!".format(message.from_user.username))
 
 
-bot.polling(none_stop=True)
+@server.route('/' + TOKEN, methods=['POST'])
+def getMessage():
+    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
+    return "!", 200
 
+
+@server.route("/")
+def webhook():
+    bot.remove_webhook()
+    bot.set_webhook(url=URL + TOKEN)
+    return "!", 200
+
+
+if __name__ == "__main__":
+    server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
