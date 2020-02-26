@@ -15,7 +15,7 @@ def start_doc(message):
     """Функция ответа пользователю"""
     if restricted_filename(message.document.file_name):
         try:
-            bot.send_message(message.chat.id, text="Уважаемый {} ! \n\nПожалуйста, заливайте ваши исходные коды на сервисы: pastebin.com или gist.github.com \n\nСпасибо за понимание!".format(user_mention(message.from_user)))
+            bot.send_message(message.chat.id, text="Уважаемый {} ! \n\nПожалуйста, заливайте ваши файлы на сервисы: pastebin.com или gist.github.com \n\nСпасибо за понимание!".format(user_mention(message.from_user)))
             bot.delete_message(message.chat.id, message.message_id)
         except Exception as A:
             print("[LOG]", A)
@@ -28,7 +28,8 @@ def user_mention(user):
 
 def restricted_filename(file_name):
     """Функция для проверки имени файла"""
-    return pathlib.Path(file_name).suffix == ".py"
+    sfx = pathlib.Path(file_name).suffix
+    return sfx in [".py", ".txt", ".ini", ".cfg"]
 
 
 @bot.message_handler(commands=["check"])
