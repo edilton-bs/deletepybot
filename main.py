@@ -29,7 +29,7 @@ def user_mention(user):
 def restricted_filename(file_name):
     """Функция для проверки имени файла"""
     sfx = pathlib.Path(file_name).suffix
-    return sfx in [".py", ".txt", ".ini", ".cfg"]
+    return sfx in [".py", ".txt", ".ini", ".cfg", ".doc", ".docx", ".xls", ".xlsx"]
 
 
 @bot.message_handler(commands=["check"])
