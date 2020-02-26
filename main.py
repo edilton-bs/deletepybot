@@ -8,6 +8,7 @@ TOKEN = os.getenv("TOKEN")
 URL = os.getenv("URL")
 server = Flask(__name__)
 bot = telebot.TeleBot(TOKEN)
+VERSION = "1.2.borntohack"
 
 
 @bot.message_handler(content_types=["document"])
@@ -29,13 +30,13 @@ def user_mention(user):
 def restricted_filename(file_name):
     """Функция для проверки имени файла"""
     sfx = pathlib.Path(file_name).suffix
-    return sfx in [".py", ".txt", ".ini", ".cfg", ".doc", ".docx", ".xls", ".xlsx"]
+    return sfx in [".py", ".txt", ".ini", ".cfg", ".doc", ".docx", ".xls", ".xlsx", ".exe"]
 
 
-@bot.message_handler(commands=["check"])
+@bot.message_handler(commands=["dp_version"])
 def check_status(message):
     """Функция для ответа пользователю"""
-    bot.send_message(message.chat.id, "Ok!", reply_to_message_id=message.message_id)
+    bot.send_message(message.chat.id, VERSION, reply_to_message_id=message.message_id)
 
 
 @server.route('/' + TOKEN, methods=['POST'])
