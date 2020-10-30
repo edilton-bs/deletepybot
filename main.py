@@ -2,6 +2,7 @@ import telebot
 import os
 import pathlib
 from flask import Flask, request
+from codehound import get_code_lengths
 
 
 TOKEN = os.getenv("TOKEN")
@@ -17,6 +18,16 @@ def start_doc(message):
         try:
             bot.send_message(message.chat.id, text="Уважаемый {} ! \n\nПожалуйста, заливайте ваши исходные коды на сервисы: pastebin.com или gist.github.com \n\nСпасибо за понимание!".format(user_mention(message.from_user)))
             bot.delete_message(message.chat.id, message.message_id)
+        except Exception as A:
+            print("[LOG]", A)
+
+
+@bot.message_handler(func=lambda m: True)
+def check_for_code(message):
+    lengths = get_code_lengths(message.text, min_lines=10)
+    if lengths:
+        try:
+            bot.send_message(message.chat.id, text="Уважаемый {} ! \n\nПожалуйста, заливайте ваши исходные коды на сервисы pastebin.com или gist.github.com \n\nСпасибо за понимание!".format(user_mention(message.from_user)))
         except Exception as A:
             print("[LOG]", A)
 
