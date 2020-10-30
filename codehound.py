@@ -2,6 +2,10 @@
 Module for looking for code inclusions in text.
 """
 
+__all__ = ["find_codeparts", "get_code_lengths"]
+__version__ = "0.0.1"
+
+
 from sys import version_info
 
 from ast import PyCF_ONLY_AST as c_flags
@@ -19,6 +23,7 @@ def filter_empty_strings(arr:list, indices:list, min_lenght:int) -> list:
             end -= 1
         indices[i] = (start, end)
     return [(start, end) for start, end in indices if (end-start)>=min_lenght]
+
 
 def find_codeparts(text:str, min_lines=5) -> list:
     """
@@ -54,8 +59,10 @@ def find_codeparts(text:str, min_lines=5) -> list:
             code_fragments.append((start, end-1))
     return filter_empty_strings(lines, code_fragments, min_lines)
 
+
 def get_code_lengths(text:str, min_lines=5)->list:
     """
-    Finds a lengths of inclusions of code in text."""
+    Finds a lengths of inclusions of code in text.
+    """
     parts = find_codeparts(text, min_lines)
     return [(end-start) for start, end in parts]
